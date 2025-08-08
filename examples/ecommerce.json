@@ -1,0 +1,172 @@
+{
+  "GET /products": {
+    "status": 200,
+    "delay": 150,
+    "response": [
+      {
+        "id": 1,
+        "name": "{{faker.commerce.productName}}",
+        "price": "{{faker.commerce.price}}",
+        "description": "{{faker.commerce.productDescription}}",
+        "category": "{{faker.commerce.department}}",
+        "image": "{{faker.image.url}}",
+        "inStock": "{{random.boolean}}",
+        "rating": "{{random.number(1,5)}}",
+        "createdAt": "{{date.past}}"
+      },
+      {
+        "id": 2,
+        "name": "{{faker.commerce.productName}}",
+        "price": "{{faker.commerce.price}}",
+        "description": "{{faker.commerce.productDescription}}",
+        "category": "{{faker.commerce.department}}",
+        "image": "{{faker.image.url}}",
+        "inStock": "{{random.boolean}}",
+        "rating": "{{random.number(1,5)}}",
+        "createdAt": "{{date.past}}"
+      }
+    ]
+  },
+  "GET /products/:id": {
+    "status": 200,
+    "response": {
+      "id": "{{params.id}}",
+      "name": "{{faker.commerce.productName}}",
+      "price": "{{faker.commerce.price}}",
+      "description": "{{faker.commerce.productDescription}}",
+      "category": "{{faker.commerce.department}}",
+      "image": "{{faker.image.url}}",
+      "images": [
+        "{{faker.image.url}}",
+        "{{faker.image.url}}",
+        "{{faker.image.url}}"
+      ],
+      "inStock": "{{random.boolean}}",
+      "stockCount": "{{random.number(0,100)}}",
+      "rating": "{{random.number(1,5)}}",
+      "reviews": [
+        {
+          "id": 1,
+          "user": "{{faker.person.fullName}}",
+          "rating": "{{random.number(3,5)}}",
+          "comment": "{{faker.lorem.sentence}}",
+          "date": "{{date.past}}"
+        }
+      ],
+      "specifications": {
+        "weight": "{{random.number(1,10)}} kg",
+        "dimensions": "{{random.number(10,50)}}x{{random.number(10,50)}}x{{random.number(5,20)}} cm",
+        "color": "{{faker.color.human}}"
+      },
+      "createdAt": "{{date.past}}",
+      "updatedAt": "{{date.recent}}"
+    }
+  },
+  "GET /categories": {
+    "status": 200,
+    "response": [
+      {
+        "id": 1,
+        "name": "{{faker.commerce.department}}",
+        "slug": "{{faker.lorem.slug}}",
+        "description": "{{faker.lorem.sentence}}",
+        "productCount": "{{random.number(5,50)}}"
+      },
+      {
+        "id": 2,
+        "name": "{{faker.commerce.department}}",
+        "slug": "{{faker.lorem.slug}}",
+        "description": "{{faker.lorem.sentence}}",
+        "productCount": "{{random.number(5,50)}}"
+      }
+    ]
+  },
+  "POST /cart": {
+    "status": 201,
+    "response": {
+      "id": "{{random.uuid}}",
+      "userId": "{{body.userId}}",
+      "items": [],
+      "total": 0,
+      "createdAt": "{{date.now}}"
+    }
+  },
+  "POST /cart/:cartId/items": {
+    "status": 201,
+    "response": {
+      "id": "{{random.uuid}}",
+      "cartId": "{{params.cartId}}",
+      "productId": "{{body.productId}}",
+      "quantity": "{{body.quantity}}",
+      "price": "{{faker.commerce.price}}",
+      "addedAt": "{{date.now}}"
+    }
+  },
+  "GET /cart/:cartId": {
+    "status": 200,
+    "response": {
+      "id": "{{params.cartId}}",
+      "userId": "{{random.number(1,100)}}",
+      "items": [
+        {
+          "id": "{{random.uuid}}",
+          "productId": 1,
+          "productName": "{{faker.commerce.productName}}",
+          "quantity": 2,
+          "price": "{{faker.commerce.price}}",
+          "total": "{{faker.commerce.price}}"
+        }
+      ],
+      "subtotal": "{{faker.commerce.price}}",
+      "tax": "{{faker.commerce.price}}",
+      "shipping": "{{faker.commerce.price}}",
+      "total": "{{faker.commerce.price}}",
+      "updatedAt": "{{date.recent}}"
+    }
+  },
+  "POST /orders": {
+    "status": 201,
+    "response": {
+      "id": "{{random.uuid}}",
+      "orderNumber": "ORD-{{random.number(10000,99999)}}",
+      "userId": "{{body.userId}}",
+      "items": "{{body.items}}",
+      "total": "{{body.total}}",
+      "status": "pending",
+      "shippingAddress": "{{body.shippingAddress}}",
+      "billingAddress": "{{body.billingAddress}}",
+      "paymentMethod": "{{body.paymentMethod}}",
+      "estimatedDelivery": "{{date.future}}",
+      "createdAt": "{{date.now}}"
+    }
+  },
+  "GET /orders/:id": {
+    "status": 200,
+    "response": {
+      "id": "{{params.id}}",
+      "orderNumber": "ORD-{{random.number(10000,99999)}}",
+      "userId": "{{random.number(1,100)}}",
+      "status": "shipped",
+      "total": "{{faker.commerce.price}}",
+      "items": [
+        {
+          "productId": 1,
+          "productName": "{{faker.commerce.productName}}",
+          "quantity": 1,
+          "price": "{{faker.commerce.price}}"
+        }
+      ],
+      "shippingAddress": {
+        "street": "{{faker.location.streetAddress}}",
+        "city": "{{faker.location.city}}",
+        "state": "{{faker.location.state}}",
+        "zipCode": "{{faker.location.zipCode}}",
+        "country": "{{faker.location.country}}"
+      },
+      "trackingNumber": "{{faker.string.alphanumeric(12)}}",
+      "estimatedDelivery": "{{date.future}}",
+      "createdAt": "{{date.past}}",
+      "updatedAt": "{{date.recent}}"
+    }
+  }
+}

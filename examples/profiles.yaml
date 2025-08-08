@@ -1,0 +1,108 @@
+profiles:
+  development:
+    GET /api/config:
+      status: 200
+      response:
+        environment: "development"
+        debug: true
+        apiUrl: "http://localhost:3000"
+        features:
+          - "feature-a"
+          - "feature-b"
+    
+    GET /api/users:
+      status: 200
+      delay: 100
+      response:
+        - id: 1
+          name: "Dev User 1"
+          email: "dev1@example.com"
+          role: "developer"
+        - id: 2
+          name: "Dev User 2"
+          email: "dev2@example.com"
+          role: "tester"
+    
+    POST /api/users:
+      status: 201
+      response:
+        id: "{{random.number(100,999)}}"
+        name: "{{body.name}}"
+        email: "{{body.email}}"
+        role: "user"
+        createdAt: "{{date.now}}"
+
+  staging:
+    GET /api/config:
+      status: 200
+      response:
+        environment: "staging"
+        debug: false
+        apiUrl: "https://staging-api.example.com"
+        features:
+          - "feature-a"
+    
+    GET /api/users:
+      status: 200
+      delay: 200
+      response:
+        - id: 1
+          name: "Staging User"
+          email: "staging@example.com"
+          role: "admin"
+    
+    POST /api/users:
+      status: 422
+      response:
+        error: "User creation disabled in staging"
+
+  production:
+    GET /api/config:
+      status: 200
+      response:
+        environment: "production"
+        debug: false
+        apiUrl: "https://api.example.com"
+        features: []
+    
+    GET /api/users:
+      status: 403
+      response:
+        error: "Access denied"
+    
+    POST /api/users:
+      status: 403
+      response:
+        error: "Access denied"
+
+  testing:
+    GET /api/config:
+      status: 200
+      response:
+        environment: "testing"
+        debug: true
+        apiUrl: "http://test-api.example.com"
+        features:
+          - "feature-a"
+          - "feature-b"
+          - "feature-c"
+    
+    GET /api/users:
+      status: 200
+      delay: 0
+      response:
+        - id: 1
+          name: "Test User"
+          email: "test@example.com"
+          role: "tester"
+    
+    POST /api/users:
+      status: 201
+      response:
+        id: 999
+        name: "{{body.name}}"
+        email: "{{body.email}}"
+        role: "test-user"
+        createdAt: "2023-01-01T00:00:00.000Z"
+
+default: development

@@ -1,0 +1,102 @@
+{
+  "GET /users": {
+    "status": 200,
+    "delay": 100,
+    "response": [
+      {
+        "id": 1,
+        "name": "{{faker.person.firstName}}",
+        "email": "{{faker.internet.email}}",
+        "avatar": "{{faker.image.avatar}}",
+        "createdAt": "{{date.past}}"
+      },
+      {
+        "id": 2,
+        "name": "{{faker.person.firstName}}",
+        "email": "{{faker.internet.email}}",
+        "avatar": "{{faker.image.avatar}}",
+        "createdAt": "{{date.past}}"
+      }
+    ]
+  },
+  "GET /users/:id": {
+    "status": 200,
+    "response": {
+      "id": "{{params.id}}",
+      "name": "{{faker.person.fullName}}",
+      "email": "{{faker.internet.email}}",
+      "avatar": "{{faker.image.avatar}}",
+      "bio": "{{faker.lorem.paragraph}}",
+      "website": "{{faker.internet.url}}",
+      "company": "{{faker.company.name}}",
+      "createdAt": "{{date.past}}",
+      "updatedAt": "{{date.recent}}"
+    }
+  },
+  "POST /users": {
+    "status": 201,
+    "response": {
+      "id": "{{random.number(100,999)}}",
+      "name": "{{body.name}}",
+      "email": "{{body.email}}",
+      "avatar": "{{faker.image.avatar}}",
+      "createdAt": "{{date.now}}",
+      "updatedAt": "{{date.now}}"
+    }
+  },
+  "PUT /users/:id": {
+    "status": 200,
+    "response": {
+      "id": "{{params.id}}",
+      "name": "{{body.name}}",
+      "email": "{{body.email}}",
+      "updatedAt": "{{date.now}}"
+    }
+  },
+  "DELETE /users/:id": {
+    "status": 204,
+    "response": null
+  },
+  "GET /posts": {
+    "status": 200,
+    "response": [
+      {
+        "id": 1,
+        "title": "{{faker.lorem.sentence}}",
+        "content": "{{faker.lorem.paragraphs}}",
+        "authorId": "{{random.number(1,10)}}",
+        "tags": ["{{faker.lorem.word}}", "{{faker.lorem.word}}"],
+        "published": "{{random.boolean}}",
+        "createdAt": "{{date.past}}"
+      },
+      {
+        "id": 2,
+        "title": "{{faker.lorem.sentence}}",
+        "content": "{{faker.lorem.paragraphs}}",
+        "authorId": "{{random.number(1,10)}}",
+        "tags": ["{{faker.lorem.word}}", "{{faker.lorem.word}}"],
+        "published": "{{random.boolean}}",
+        "createdAt": "{{date.past}}"
+      }
+    ]
+  },
+  "POST /auth/login": {
+    "status": 200,
+    "condition": "body.email === 'admin@example.com' && body.password === 'secret'",
+    "response": {
+      "token": "{{faker.string.alphanumeric(64)}}",
+      "user": {
+        "id": 1,
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "role": "admin"
+      }
+    }
+  },
+  "POST /auth/login": {
+    "status": 401,
+    "response": {
+      "error": "Invalid credentials"
+    }
+  }
+}

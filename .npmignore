@@ -1,0 +1,10 @@
+src/
+tsconfig.json
+.git/
+.gitignore
+examples/
+*.log
+.DS_Store
+node_modules/
+coverage/
+.nyc_output/
