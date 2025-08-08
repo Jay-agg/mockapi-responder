@@ -24,6 +24,8 @@ export interface ServerOptions {
   watch?: boolean;
   cors?: boolean;
   swagger?: boolean;
+  debug?: boolean;
+  logRequests?: boolean;
 }
 
 export interface RouteParams {

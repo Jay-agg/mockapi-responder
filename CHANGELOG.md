@@ -2,9 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - 2024-01-XX
+## [2.0.0] - 2024-01-XX
 
-### Added
+### 🚨 BREAKING CHANGES
+- Complete rewrite of route resolution system
+- Enhanced error handling and debugging
+
+### ✅ FIXED (Critical Issues)
+- **CRITICAL**: Fixed route resolution bug where all requests were interpreted as path "/"
+- **MAJOR**: Added binary file response support (Excel, PDF, images, ZIP, CSV)
+- **MAJOR**: Implemented comprehensive debug logging with `--debug` flag
+
+### 🎉 NEW FEATURES
+- Binary response templates: `{{binary.excel}}`, `{{binary.pdf}}`, `{{binary.image}}`, etc.
+- Debug mode with detailed request/response logging
+- Enhanced template expression validation
+- Better error messages and warnings
+- Improved configuration validation
+
+### 🔧 IMPROVEMENTS
+- Better route matching algorithm using `app.all()` instead of `app.use()`
+- Enhanced template engine with binary support
+- More comprehensive configuration validation
+- Improved request logging with debug information
+- Better error handling throughout the application
+
+### 📚 TECHNICAL DETAILS
+- Changed from `app.use('*')` to `app.all('*')` for better route handling
+- Added binary content type detection and proper headers
+- Enhanced template validation with regex patterns
+- Improved debug logging throughout request lifecycle
+
+## [1.0.0] - 2024-01-XX (DEPRECATED - Critical Issues)
+
+### Issues Found in v1.0.0
+- Route resolution completely broken (all requests interpreted as "/")
+- No binary file support
+- Poor error handling and debugging
+- Limited template validation
+
+### Added (v1.0.0)
 - Initial release of MockAPI Responder
 - Single JSON/YAML config file support
 - Dynamic route handling with parameter substitution (`/users/:id`)

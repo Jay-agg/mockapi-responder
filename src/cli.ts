@@ -21,6 +21,7 @@ program
   .option('-w, --watch', 'Watch config file for changes and hot reload', false)
   .option('--no-cors', 'Disable CORS headers')
   .option('--swagger', 'Enable Swagger documentation endpoint', false)
+  .option('--debug', 'Enable debug logging for troubleshooting', false)
   .option('--no-logs', 'Disable request logging', false)
   .action(async (configPath: string, options: any) => {
     try {
@@ -45,7 +46,9 @@ program
         profile: options.profile,
         watch: options.watch,
         cors: options.cors !== false,
-        swagger: options.swagger
+        swagger: options.swagger,
+        debug: options.debug,
+        logRequests: options.logs !== false
       };
 
       // Create and start server

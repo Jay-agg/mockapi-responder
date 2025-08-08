@@ -97,6 +97,9 @@ export class ConfigParser {
       if (typeof endpoint.delay !== 'number' || endpoint.delay < 0) {
         throw new Error(`Invalid delay for route "${route}": ${endpoint.delay}`);
       }
+      if (endpoint.delay > 30000) {
+        console.warn(`⚠️ Warning: Delay of ${endpoint.delay}ms for route "${route}" is very high (>30s)`);
+      }
       validatedEndpoint.delay = endpoint.delay;
     }
 
@@ -114,7 +117,42 @@ export class ConfigParser {
       validatedEndpoint.condition = endpoint.condition;
     }
 
+    // Validate template expressions in response
+    this.validateTemplateExpressions(endpoint.response, route);
+
     return validatedEndpoint;
+  }
+
+  private static validateTemplateExpressions(response: any, route: string): void {
+    const responseStr = JSON.stringify(response);
+    const templateMatches = responseStr.match(/\{\{[^}]+\}\}/g);
+    
+    if (templateMatches) {
+      const validExpressions = [
+        // Faker expressions
+        /^faker\./,
+        // Parameter expressions
+        /^params\./,
+        /^query\./,
+        /^body\./,
+        /^headers\./,
+        // Date expressions
+        /^date\.(now|past|future|recent)$/,
+        // Random expressions
+        /^random\.(number|uuid|boolean)/,
+        // Binary expressions
+        /^binary\.(excel|pdf|image|zip|csv)$/
+      ];
+
+      for (const template of templateMatches) {
+        const expression = template.replace(/\{\{|\}\}/g, '').trim();
+        const isValid = validExpressions.some(pattern => pattern.test(expression));
+        
+        if (!isValid) {
+          console.warn(`⚠️ Warning: Unknown template expression "${template}" in route "${route}"`);
+        }
+      }
+    }
   }
 
   private static isValidRoute(route: string): boolean {

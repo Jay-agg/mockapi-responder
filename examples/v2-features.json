@@ -1,0 +1,125 @@
+{
+  "GET /api/health": {
+    "status": 200,
+    "response": {
+      "status": "healthy",
+      "timestamp": "{{date.now}}",
+      "version": "2.0.0"
+    }
+  },
+  "GET /api/users": {
+    "status": 200,
+    "delay": 100,
+    "response": [
+      {
+        "id": 1,
+        "name": "{{faker.person.fullName}}",
+        "email": "{{faker.internet.email}}",
+        "avatar": "{{faker.image.avatar}}",
+        "createdAt": "{{date.past}}"
+      },
+      {
+        "id": 2,
+        "name": "{{faker.person.fullName}}",
+        "email": "{{faker.internet.email}}",
+        "avatar": "{{faker.image.avatar}}",
+        "createdAt": "{{date.past}}"
+      }
+    ]
+  },
+  "GET /api/users/:id": {
+    "status": 200,
+    "response": {
+      "id": "{{params.id}}",
+      "name": "{{faker.person.fullName}}",
+      "email": "{{faker.internet.email}}",
+      "bio": "{{faker.lorem.paragraph}}",
+      "avatar": "{{faker.image.avatar}}",
+      "lastSeen": "{{date.recent}}"
+    }
+  },
+  "POST /api/users": {
+    "status": 201,
+    "response": {
+      "id": "{{random.number(1000,9999)}}",
+      "name": "{{body.name}}",
+      "email": "{{body.email}}",
+      "createdAt": "{{date.now}}"
+    }
+  },
+  "POST /api/process-excel": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": "attachment; filename=\"processed-data.xlsx\""
+    },
+    "response": "{{binary.excel}}"
+  },
+  "GET /api/reports/pdf": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=\"report.pdf\""
+    },
+    "response": "{{binary.pdf}}"
+  },
+  "GET /api/export/csv": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "text/csv",
+      "Content-Disposition": "attachment; filename=\"export.csv\""
+    },
+    "response": "{{binary.csv}}"
+  },
+  "GET /api/avatar": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "image/png"
+    },
+    "response": "{{binary.image}}"
+  },
+  "GET /api/backup": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/zip",
+      "Content-Disposition": "attachment; filename=\"backup.zip\""
+    },
+    "response": "{{binary.zip}}"
+  },
+  "POST /api/auth/login": {
+    "status": 200,
+    "condition": "body.email === 'admin@example.com' && body.password === 'secret123'",
+    "response": {
+      "success": true,
+      "token": "{{faker.string.alphanumeric(64)}}",
+      "user": {
+        "id": 1,
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "role": "admin"
+      }
+    }
+  },
+  "POST /api/auth/login": {
+    "status": 401,
+    "response": {
+      "success": false,
+      "error": "Invalid credentials"
+    }
+  },
+  "GET /api/search": {
+    "status": 200,
+    "response": {
+      "query": "{{query.q}}",
+      "limit": "{{query.limit}}",
+      "results": [
+        {
+          "id": "{{random.number(1,100)}}",
+          "title": "{{faker.lorem.sentence}}",
+          "description": "{{faker.lorem.paragraph}}",
+          "relevance": "{{random.number(1,100)}}"
+        }
+      ]
+    }
+  }
+}

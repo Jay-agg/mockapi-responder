@@ -1,8 +1,15 @@
-# MockAPI Responder
+# MockAPI Responder v2.0
 
 A developer-friendly tool that spins up a mock API server from a single JSON or YAML file, no code required.
 
 Perfect for frontend teams, prototyping, testing integrations, or working offline when the real backend isn't ready.
+
+## 🚀 What's New in v2.0
+
+- ✅ **FIXED**: Critical route resolution bug (v1.0 was completely broken)
+- 🎉 **NEW**: Binary file response support (Excel, PDF, images, etc.)
+- 🔍 **NEW**: Debug mode with `--debug` flag for troubleshooting
+- 💪 **IMPROVED**: Better error handling and validation
 
 ## 🚀 Quick Start
 
@@ -31,11 +38,13 @@ Your mock API server is now running at `http://localhost:3000`! 🎉
 - **Single Config File** - Define all endpoints in one JSON or YAML file
 - **Dynamic Routes** - Support for `/users/:id` with parameter substitution
 - **Faker.js Integration** - Generate realistic fake data with `{{faker.person.firstName}}`
+- **Binary File Support** - Serve Excel, PDF, images with `{{binary.excel}}`
 - **Response Delays** - Simulate network latency with per-endpoint delays
 - **Error Simulation** - Configure endpoints to return 4xx/5xx errors
 - **Query Parameter Handling** - Access query params in responses with `{{query.limit}}`
 - **Multiple Profiles** - Switch between dev, staging, and test configurations
 - **Hot Reload** - Updates automatically when config file changes
+- **Debug Mode** - Detailed logging with `--debug` flag
 - **OpenAPI/Swagger Docs** - Auto-generated documentation at `/docs`
 - **CORS Support** - Works with frontend apps out of the box
 
@@ -81,10 +90,34 @@ Create a `mockapi.json` file:
 }
 ```
 
+### Binary File Example
+
+Need to mock file downloads? v2.0 supports binary responses:
+
+```json
+{
+  "POST /api/export/excel": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": "attachment; filename=\"export.xlsx\""
+    },
+    "response": "{{binary.excel}}"
+  },
+  "GET /api/report/pdf": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/pdf"
+    },
+    "response": "{{binary.pdf}}"
+  }
+}
+```
+
 Start the server:
 
 ```bash
-npx mockapi-responder mockapi.json --port 4000 --watch
+npx mockapi-responder mockapi.json --port 4000 --watch --debug
 ```
 
 ### Multiple Profiles
@@ -128,6 +161,13 @@ MockAPI supports powerful templating for dynamic responses:
 - `{{faker.internet.email}}` - Random email
 - `{{faker.lorem.sentence}}` - Random sentence
 - `{{faker.number.int(1,100)}}` - Random number
+
+### Binary Files (NEW in v2.0)
+- `{{binary.excel}}` - Excel file (.xlsx)
+- `{{binary.pdf}}` - PDF document
+- `{{binary.image}}` - PNG image
+- `{{binary.csv}}` - CSV file
+- `{{binary.zip}}` - ZIP archive
 
 ### Request Data
 - `{{params.id}}` - URL parameters
@@ -173,6 +213,7 @@ Options:
   -h, --host <string>      Host to bind to (default: localhost)
   --profile <name>         Profile to use for multi-profile configs
   -w, --watch              Watch config file for changes
+  --debug                  Enable debug logging (NEW in v2.0)
   --no-cors                Disable CORS headers
   --swagger                Enable Swagger documentation at /docs
   --help                   Show help

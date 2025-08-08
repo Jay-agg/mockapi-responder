@@ -51,7 +51,15 @@ export class MockServer {
 
     // Request logging
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+      if (this.options.logRequests !== false) {
+        console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+      }
+      if (this.options.debug) {
+        console.log(`🔍 DEBUG: Request headers:`, req.headers);
+        if (req.body && Object.keys(req.body).length > 0) {
+          console.log(`🔍 DEBUG: Request body:`, req.body);
+        }
+      }
       next();
     });
   }
@@ -97,15 +105,29 @@ export class MockServer {
       this.setupSwaggerDocs();
     }
 
-    // Catch-all route handler
-    this.app.use('*', async (req: Request, res: Response) => {
+    // Catch-all route handler - handle all requests
+    this.app.all('*', async (req: Request, res: Response) => {
       const method = req.method;
-      const requestPath = req.path;
+      const requestPath = req.path; // Use req.path for clean path without query params
+      
+      // Debug logging
+      if (this.options.debug) {
+        console.log(`🔍 DEBUG: Incoming request: ${method} ${requestPath}`);
+        console.log(`🔍 DEBUG: Available routes:`, this.routes.map(r => `${r.method} ${r.path}`));
+      }
 
       // Find matching route
       const match = RouteHandler.findMatchingRoute(this.routes, method, requestPath);
       
+      if (this.options.debug) {
+        console.log(`🔍 DEBUG: Route match result:`, match ? `Matched ${match.route.originalRoute}` : 'No match found');
+      }
+      
       if (!match) {
+        console.log(`❌ Route not found: ${method} ${requestPath}`);
+        if (this.options.debug) {
+          console.log(`🔍 DEBUG: Available routes:`, this.routes.map(r => `${r.method} ${r.path}`));
+        }
         res.status(404).json({
           error: 'Route not found',
           method,
@@ -167,6 +189,24 @@ export class MockServer {
 
       // Process response template
       const processedResponse = TemplateEngine.processTemplate(endpoint.response, context);
+
+      // Handle binary responses
+      if (typeof processedResponse === 'string' && this.isBinaryResponse(processedResponse)) {
+        const binaryData = Buffer.from(processedResponse, 'base64');
+        
+        // Set appropriate content type for binary data if not already set
+        if (!res.getHeader('Content-Type')) {
+          const contentType = this.getBinaryContentType(endpoint.response as string);
+          res.setHeader('Content-Type', contentType);
+        }
+        
+        if (this.options.debug) {
+          console.log(`🔍 DEBUG: Sending binary response (${binaryData.length} bytes)`);
+        }
+        
+        res.status(statusCode).send(binaryData);
+        return;
+      }
 
       // Set content type if not already set
       if (!res.getHeader('Content-Type')) {
@@ -258,6 +298,36 @@ export class MockServer {
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private isBinaryResponse(response: string): boolean {
+    // Check if response is a base64 encoded binary (starts with valid base64 pattern and is long enough)
+    try {
+      // Base64 strings are typically much longer than text responses and contain specific patterns
+      return response.length > 50 && 
+             Buffer.from(response, 'base64').toString('base64') === response;
+    } catch {
+      return false;
+    }
+  }
+
+  private getBinaryContentType(originalResponse: string): string {
+    if (originalResponse.includes('{{binary.excel}}')) {
+      return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    }
+    if (originalResponse.includes('{{binary.pdf}}')) {
+      return 'application/pdf';
+    }
+    if (originalResponse.includes('{{binary.image}}')) {
+      return 'image/png';
+    }
+    if (originalResponse.includes('{{binary.zip}}')) {
+      return 'application/zip';
+    }
+    if (originalResponse.includes('{{binary.csv}}')) {
+      return 'text/csv';
+    }
+    return 'application/octet-stream';
   }
 
   private setupSwaggerDocs(): void {
