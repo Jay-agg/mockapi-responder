@@ -24,7 +24,7 @@
     "faker",
     "json-server"
   ],
-  "author": "Your Name",
+  "author": "Jayant Aggarwal <jadps2004@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "^8.3.1",
@@ -50,10 +50,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/mockapi-responder.git"
+    "url": "https://github.com/jay-aggarwal/mockapi-responder.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/mockapi-responder/issues"
+    "url": "https://github.com/jay-aggarwal/mockapi-responder/issues"
   },
-  "homepage": "https://github.com/yourusername/mockapi-responder#readme"
+  "homepage": "https://github.com/jay-aggarwal/mockapi-responder#readme"
 }
