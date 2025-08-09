@@ -1,6 +1,6 @@
 {
   "name": "mockapi-responder",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A developer-friendly tool that spins up a mock API server from a single JSON or YAML file, no code required",
   "main": "dist/index.js",
   "bin": {
