@@ -4,12 +4,6 @@ A developer-friendly tool that spins up a mock API server from a single JSON or 
 
 Perfect for frontend teams, prototyping, testing integrations, or working offline when the real backend isn't ready.
 
-## 🚀 What's New in v2.0
-
-- ✅ **FIXED**: Critical route resolution bug (v1.0 was completely broken)
-- 🎉 **NEW**: Binary file response support (Excel, PDF, images, etc.)
-- 🔍 **NEW**: Debug mode with `--debug` flag for troubleshooting
-- 💪 **IMPROVED**: Better error handling and validation
 
 ## 🚀 Quick Start
 

@@ -253,7 +253,7 @@ export class TemplateEngine {
       0x50, 0x4B, 0x03, 0x04, 0x14, 0x00, 0x06, 0x00, // Excel file signature
       0x08, 0x00, 0x00, 0x00, 0x21, 0x00, 0x00, 0x00
     ]);
-    const mockContent = Buffer.from('Mock Excel Content - Replace with real Excel generation');
+    const mockContent = Buffer.from('MockAPI Generated Excel File Content');
     return Buffer.concat([excelHeader, mockContent]).toString('base64');
   }
 

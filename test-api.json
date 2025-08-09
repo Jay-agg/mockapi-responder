@@ -1,0 +1,54 @@
+{
+  "GET /users": {
+    "status": 200,
+    "delay": 200,
+    "response": [
+      {
+        "id": 1,
+        "name": "{{faker.person.firstName}}",
+        "email": "{{faker.internet.email}}"
+      },
+      {
+        "id": 2,
+        "name": "{{faker.person.firstName}}",
+        "email": "{{faker.internet.email}}"
+      }
+    ]
+  },
+  "GET /users/:id": {
+    "status": 200,
+    "response": {
+      "id": "{{params.id}}",
+      "name": "{{faker.person.fullName}}",
+      "email": "{{faker.internet.email}}",
+      "createdAt": "{{date.past}}"
+    }
+  },
+  "POST /users": {
+    "status": 201,
+    "response": {
+      "id": "{{random.number(1,1000)}}",
+      "name": "{{body.name}}",
+      "email": "{{body.email}}",
+      "createdAt": "{{date.now}}"
+    }
+  },
+  "POST /login": {
+    "status": 401,
+    "condition": "body.password !== 'secret'",
+    "response": {
+      "error": "Invalid credentials"
+    }
+  },
+  "GET /posts": {
+    "status": 200,
+    "response": [
+      {
+        "id": 1,
+        "title": "{{faker.lorem.sentence}}",
+        "content": "{{faker.lorem.paragraphs}}",
+        "authorId": "{{random.number(1,10)}}"
+      }
+    ]
+  }
+}
